@@ -1,3 +1,9 @@
+/**
+* 
+* @author Grpup 7 (Ryan Walden, Phillip King, Christian Enamorado, Tu Nguyen, Quantonio Nunnally)
+* 
+**/
+
 import java.io.*;
 
 public class LexicalAnalyzerClient {
