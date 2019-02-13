@@ -2,17 +2,21 @@ import java.util.ArrayList;
 
 public class LexicalAnalyzer {
 	
+	//declare list for lexemes and errors caught during analysis
 	private ArrayList<String> lexemes, errors;
 	
 	public LexicalAnalyzer() {
 		lexemes = new ArrayList<String>();
 		errors = new ArrayList<String>();
 		
+		//add to lists their own corresponding headings to serve as beginning of string output 
 		lexemes.add(String.format("Lexemes \t\t Tokens", " "));
 		lexemes.add("------------------------------------------------");
 		errors.add("Errors");
 	}
 	
+	//scan letter by letter
+	//word completed when encounter space, symbol, quote or operator
 	public void buildWord(String codes) {
 		//remove comments
 		codes = codes.replace("//.*", "");
@@ -20,38 +24,51 @@ public class LexicalAnalyzer {
 		String word = "";
 		String state = "";
 		
-		//scan letter by letter
-		//word completed when encounter space, symbol or operator
 		for(int i = 0; i< codes.length(); i++) {
+			//state holds a single character during each iteration
 			state = "" + codes.charAt(i);
 			if(word.matches("\".*")) {
+				//word has form of string literal
 				if(state.matches("\"")) {
+					//for a word that has the form of a string literal, append a closing quote
 					word = word + "\"";
+					//determine and add to lexeme list the token type for word
 					compare(word);
+					//set word to empty string before next iteration
 					word = "";
 				} else if(word.matches("")) {
+					//add opening quote to empty word string to begin string literal
 					word = "\"";
 				} else {
+					//append character to word
 					word += codes.charAt(i);
 				}
 			} else if(state.matches("\\s+")) {
+				//state character is one or more strings
 				if(!word.matches(""))
+				//if word is not empty, determine and add to lexeme list the token type for word
 					compare(word);
+				//set word to empty string before next iteration
 				word = "";
 			} else if(state.matches("=|>|<|%|$|!|~|\\?|:|->|==|>=|<=|!=|&&|\\++|--|\\+|-|"
 					+ "\\*|/|&|^|%|<<|>>|\\+=|-=|\\*=|/=|&=|^=|%=|<<=|>>=|>>>|\\{|\\}|\\[|\\]|;|,|@|::|\\(|\\)") || 
 					state.equals(".") || state.equals("...") || state.equals("|") || state.equals("||") || 
 					state.equals("|=")) {
+				//state character is an operator or separator
 				if(!word.matches(""))
+				//if word is not empty, determine and add to lexeme list the token type for word
 					compare(word);
+				//set word to empty string before next iteration
 				word = "";
 				compare(state);
 			} else {
+				//append character to word
 				word += codes.charAt(i);
 			}
 		}
 	}
 	
+	//for any match, add to the lexeme or error list the word and it's token type
 	public void compare(String word) {
 		if(word.matches("\\{|\\}|\\[|\\]|;|,|@|::|\\(|\\)")) {
 			lexemes.add(word + "\t\t\t separator");
@@ -93,12 +110,14 @@ public class LexicalAnalyzer {
 		}
 	}
 	
+	//print each lexeme in list
 	public void getLexemes(){
 		for(String lexeme : lexemes) {
 			System.out.println(lexeme);
 		}
 	}
 	
+	//print each error in list
 	public void getErrors(){
 		for(String error : errors) {
 			System.out.println(error);

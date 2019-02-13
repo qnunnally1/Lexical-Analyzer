@@ -1,18 +1,21 @@
 import java.io.*;
-import java.util.Scanner;
 
 public class LexicalAnalyzerClient {
 
 	public static void main(String[] args) {
+		//declare and set string to string content of java file passed in
 		String sourceCode = file2Text("Example.java");
 
 		LexicalAnalyzer analyzer = new LexicalAnalyzer();
 		
+		//parse source code letter by letter to find lexemes
 		analyzer.buildWord(sourceCode);
 		
+		//print lexemes and their corresponding tokens
 		analyzer.getLexemes();
 	}
 	
+	//return string of entire source code file
 	private static String file2Text(String path) {
 		StringBuilder builder = new StringBuilder();
 		
