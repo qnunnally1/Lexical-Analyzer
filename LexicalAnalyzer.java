@@ -4,6 +4,11 @@
 * 
 **/
 
+/**
+* The LexicalAnalyzer object has to be created as an object before use. When created, two ArrayLists are created, where one will 
+* hold lexemes and the other will contain any errors encountered.
+**/
+
 import java.util.ArrayList;
 
 public class LexicalAnalyzer {
@@ -21,8 +26,16 @@ public class LexicalAnalyzer {
 		errors.add("Errors");
 	}
 	
-	//scan letter by letter
-	//word completed when encounter space, symbol, quote or operator
+	/**
+	* buildWord’s job is to take the string and parse each character in search of string literals, character literals, separators, 
+	* operators and keywords. It begins by removing any comments from the string passed. Next, each character in the string is 
+	* iterated upon. During each iteration, two variables, word and state are maintained. State is used to hold a single character 
+	* relevant to the position of the i variable in the for loop used. Word is used to hold any string literal or character. Within 
+	* each iteration, if the character doesn’t match that of an operator separator, the character will be appended to word. Under 
+	* the condition that an opening quote has already been encountered, each character will appended to word until another quote 
+	* is found. For every match, meaning a string, character, separator, operator, or keyword was found, LexicalAnalyzer’s method, 
+	* compare, is used to classify the lexeme and it’s token type.
+	**/
 	public void buildWord(String codes) {
 		//remove comments
 		codes = codes.replace("//.*", "");
@@ -74,7 +87,13 @@ public class LexicalAnalyzer {
 		}
 	}
 	
-	//for any match, add to the lexeme or error list the word and it's token type
+	/**
+	* compare is used to identify any possible lexemes and add them to their corresponding lists. This method takes the string 
+	* passed in from buildWord and tests it against regular expression patterns to further identify the type of lexeme the string 
+	* may belong to.  For any match, the lexeme is added to the lexeme list. Along with the lexeme being added to the list, the 
+	* associated token is added to this same entry as an appended string. For any input strings that don’t match any of the regular 
+	* expression patterns, they are added to the error list.
+	**/
 	public void compare(String word) {
 		if(word.matches("\\{|\\}|\\[|\\]|;|,|@|::|\\(|\\)")) {
 			lexemes.add(word + "\t\t\t separator");
@@ -116,14 +135,22 @@ public class LexicalAnalyzer {
 		}
 	}
 	
-	//print each lexeme in list
+	/**
+	* To view the list of lexemes and any possible error found, LexicalAnalyzer has two methods that take care of this: getLexemes 
+	* and getErrors. Both methods handle the process of offering the client a view of any one of the lists’ contents. To receive 
+	* all lexemes found, the client will make a call to getLexemes. This will print out a list of each lexeme found within the 
+	* source code. 
+	**/
 	public void getLexemes(){
 		for(String lexeme : lexemes) {
 			System.out.println(lexeme);
 		}
 	}
 	
-	//print each error in list
+	/**
+	* To receive all lexemes found, the client will make a call to getLexemes. This will print out a list of each lexeme found 
+	* within the source code. 
+	**/
 	public void getErrors(){
 		for(String error : errors) {
 			System.out.println(error);
